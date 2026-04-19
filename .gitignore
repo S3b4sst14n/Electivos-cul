@@ -1,0 +1,36 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Supabase local (si usas CLI)
+supabase/.branches/
+supabase/.temp/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Coverage / testing
+coverage/
+.nyc_output/
+
+# Caché
+.npm
+.eslintcache
+
+# Claude (contexto local, no sube)
+.claude/
