@@ -18,7 +18,7 @@ function verifyToken(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  if (req.user?.role_name?.toLowerCase() !== 'admin') {
+  if (req.user?.role_name?.toLowerCase() !== 'administrador') {
     return res.status(403).json({ error: 'Acceso restringido a administradores' });
   }
   next();

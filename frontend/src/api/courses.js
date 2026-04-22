@@ -7,6 +7,7 @@ export const updateElective = (id, payload) => api.put(`/cursos/${id}`, payload)
 export const deleteElective = (id) => api.delete(`/cursos/${id}`).then((r) => r.data);
 
 export const listOfferings = () => api.get('/cursos/ofertas/lista').then((r) => r.data);
+export const getAdminStats = () => api.get('/cursos/ofertas/stats').then((r) => r.data);
 export const createOffering = (payload) => api.post('/cursos/ofertas/nueva', payload).then((r) => r.data);
 export const updateOffering = (id, payload) => api.put(`/cursos/ofertas/${id}`, payload).then((r) => r.data);
 export const deleteOffering = (id) => api.delete(`/cursos/ofertas/${id}`).then((r) => r.data);

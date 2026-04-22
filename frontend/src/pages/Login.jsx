@@ -18,7 +18,7 @@ export default function Login() {
     setLoading(true);
     try {
       const user = await login(id, password);
-      navigate(user.rol === 'administrador' ? '/admin/dashboard' : '/cursos');
+      navigate(user.rol === 'Administrador' ? '/admin/dashboard' : '/cursos');
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesión');
     } finally {

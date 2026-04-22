@@ -1,60 +1,155 @@
-# Electivos CUL - Backend API
+# Electivos CUL
 
-Backend REST para la plataforma de inscripción y control de cursos electivos de la Corporación Universitaria Latinoamericana (CUL). Gestiona usuarios, cursos, ofertas académicas e inscripciones con control de cupos automático.
+Plataforma web para la inscripción y gestión de cursos electivos de la Corporación Universitaria Latinoamericana (CUL). Permite a estudiantes explorar y registrarse en electivas, y a administradores gestionar cursos, ofertas e inscripciones en tiempo real.
 
-## Tecnologías
+## Stack
 
-- **Node.js** + **Express 5**
-- **Supabase** (PostgreSQL)
-- **JWT** para autenticación
-- **bcryptjs** para hash de contraseñas
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | React 18 + Vite + Tailwind CSS |
+| Backend | Node.js + Express 5 |
+| Base de datos | Supabase (PostgreSQL) |
+| Autenticación | JWT (8 h) + bcryptjs |
 
-## Requisitos
+---
 
-- Node.js 18+
-- Cuenta en [Supabase](https://supabase.com)
-- Base de datos creada con el esquema de `base.sql`
+## Funcionalidades
+
+### Estudiante
+- Catálogo de electivas con filtros por modalidad y cupos disponibles
+- Inscripción y cancelación de cursos con actualización automática de cupos
+- Historial de inscripciones activas
+
+### Administrador
+- Dashboard con métricas: total de electivas, inscripciones activas y tasa de ocupación
+- CRUD de electivas (presencial, virtual, mixta)
+- Gestión de ofertas académicas (periodo, docente, aula, horario)
+- Listado de inscritos por oferta con ordenamiento
+
+---
+
+## Estructura del proyecto
+
+```
+Electivos-cul/
+├── config/
+│   └── supabase.js                 # Cliente Supabase
+├── controllers/
+│   ├── auth.controller.js          # Registro y login
+│   ├── courses.controller.js       # CRUD electivas y ofertas
+│   └── enrollments.controller.js   # Inscripciones
+├── middleware/
+│   └── auth.middleware.js          # Verificación JWT y roles
+├── routes/
+│   ├── auth.routes.js
+│   ├── courses.routes.js
+│   └── enrollments.routes.js
+├── frontend/
+│   └── src/
+│       ├── pages/                  # Login, Registro, Catálogo, Dashboard admin…
+│       ├── components/             # CourseCard, Toast, Layout, Drawer…
+│       ├── context/
+│       │   └── AuthContext.jsx     # Estado de sesión global
+│       └── api/                    # Clientes Axios por recurso
+├── base.sql                        # Esquema de la base de datos
+├── server.js                       # Entry point del backend
+└── .env.example
+```
+
+---
 
 ## Instalación
+
+### Requisitos
+- Node.js 18+
+- Cuenta en [Supabase](https://supabase.com) con el esquema de `base.sql` aplicado
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/S3b4sst14n/Electivos-cul.git
 cd Electivos-cul
-npm install
 ```
 
-Crea el archivo `.env` basado en `.env.example`:
+### 2. Configurar variables de entorno
+
+Crea el archivo `.env` en la raíz del proyecto a partir del ejemplo:
+
+```bash
+cp .env.example .env
+```
 
 ```env
 SUPABASE_URL=https://tu-proyecto.supabase.co
 SUPABASE_ANON_KEY=sb_publishable_...
 SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
-JWT_SECRET=tu_jwt_secret
+JWT_SECRET=tu_jwt_secret_seguro
 PORT=3000
 ```
 
 > Los valores de `SUPABASE_SERVICE_ROLE_KEY` y `JWT_SECRET` se encuentran en **Project Settings → API** de tu panel de Supabase.
 
-## Iniciar el servidor
+### 3. Instalar dependencias
 
 ```bash
-node server.js
-```
+# Backend
+npm install
 
-El servidor corre en `http://localhost:3000`.
+# Frontend
+cd frontend 
+npm install
+```
 
 ---
 
-## Endpoints
+## Desarrollo
 
-### Autenticación
+Ejecuta backend y frontend en terminales separadas:
+
+```bash
+# Terminal 1 — Backend (con auto-reload)
+npm run dev
+# → http://localhost:3000
+
+# Terminal 2 — Frontend
+cd frontend && npm run dev
+# → http://localhost:5173
+```
+
+Para producción:
+
+```bash
+# Backend
+npm start
+
+# Frontend (genera dist/)
+cd frontend && npm run build
+```
+
+---
+
+## API Reference
+
+### Autenticación con JWT
+
+Los endpoints protegidos requieren el token en el header:
+
+```
+Authorization: Bearer <token>
+```
+
+El token se obtiene al hacer login y tiene validez de **8 horas**.
+
+---
+
+### Auth
 
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
 | POST | `/api/auth/register` | Registrar nuevo usuario | No |
 | POST | `/api/auth/login` | Iniciar sesión, retorna JWT | No |
 
-**Registro** — campos obligatorios:
+**Registro:**
 ```json
 {
   "first_name": "Juan",
@@ -72,8 +167,8 @@ El servidor corre en `http://localhost:3000`.
 **Login** — usa número de identificación:
 ```json
 {
-  "identification_number": "1234567890",
-  "password": "mipassword"
+  "identification_number": "1043671934",
+  "password": "admin123"
 }
 ```
 
@@ -89,7 +184,7 @@ El servidor corre en `http://localhost:3000`.
 | PUT | `/api/cursos/:id` | Actualizar electiva | Admin |
 | DELETE | `/api/cursos/:id` | Eliminar electiva | Admin |
 
-**Crear electiva:**
+**Cuerpo para crear/actualizar:**
 ```json
 {
   "name": "Inteligencia Artificial Aplicada",
@@ -99,6 +194,7 @@ El servidor corre en `http://localhost:3000`.
   "modality": "virtual"
 }
 ```
+
 > `modality`: `presencial`, `virtual` o `mixta`
 
 ---
@@ -112,7 +208,7 @@ El servidor corre en `http://localhost:3000`.
 | PUT | `/api/cursos/ofertas/:id` | Actualizar oferta | Admin |
 | DELETE | `/api/cursos/ofertas/:id` | Eliminar oferta | Admin |
 
-**Crear oferta:**
+**Cuerpo para crear/actualizar:**
 ```json
 {
   "elective_course_id": 1,
@@ -143,23 +239,11 @@ El servidor corre en `http://localhost:3000`.
 }
 ```
 
-**Listado por oferta** — parámetro opcional de orden:
+**Ordenar listado por oferta:**
 ```
 GET /api/inscripciones/oferta/1?orden=nombre
 GET /api/inscripciones/oferta/1?orden=identificacion
 ```
-
----
-
-## Autenticación con JWT
-
-Los endpoints protegidos requieren el token en el header:
-
-```
-Authorization: Bearer <token>
-```
-
-El token se obtiene al hacer login y tiene una validez de **8 horas**.
 
 ---
 
@@ -174,26 +258,3 @@ El token se obtiene al hacer login y tiene una validez de **8 horas**.
 | 403 | Sin permisos (rol insuficiente) |
 | 404 | Recurso no encontrado |
 | 500 | Error interno del servidor |
-
----
-
-## Estructura del proyecto
-
-```
-Electivos-cul/
-├── config/
-│   └── supabase.js             # Cliente Supabase
-├── controllers/
-│   ├── auth.controller.js      # Registro y login
-│   ├── courses.controller.js   # CRUD electivas y ofertas
-│   └── enrollments.controller.js # Inscripciones
-├── middleware/
-│   └── auth.middleware.js      # Verificación JWT y roles
-├── routes/
-│   ├── auth.routes.js
-│   ├── courses.routes.js
-│   └── enrollments.routes.js
-├── base.sql                    # Esquema de la base de datos
-├── server.js                   # Entry point
-└── .env.example
-```

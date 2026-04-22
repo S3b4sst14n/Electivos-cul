@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Library, CalendarDays, Users, AlertTriangle } from 'lucide-react';
-import { listElectives, listOfferings } from '../api/courses';
+import { listElectives, listOfferings, getAdminStats } from '../api/courses';
 import MetricCard from '../components/MetricCard';
 import ModalidadBadge from '../components/ModalidadBadge';
 import CuposBar from '../components/CuposBar';
@@ -8,6 +8,7 @@ import CuposBar from '../components/CuposBar';
 export default function AdminDashboard() {
   const [electives, setElectives] = useState([]);
   const [offerings, setOfferings] = useState([]);
+  const [inscritos, setInscritos] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,16 +20,14 @@ export default function AdminDashboard() {
       } finally {
         setLoading(false);
       }
+      getAdminStats().then((s) => setInscritos(s.inscritos ?? 0)).catch(() => {});
     })();
   }, []);
 
   const metrics = useMemo(() => {
-    const totalCupos = offerings.reduce((s, o) => s + (o.available_spots || 0), 0);
-    const maxTotal = offerings.reduce((s, o) => s + (o.elective_courses?.max_capacity || 0), 0);
-    const inscritos = Math.max(0, maxTotal - totalCupos);
     const sinCupos = offerings.filter((o) => o.available_spots === 0).length;
     return { electivas: electives.length, ofertas: offerings.length, inscritos, sinCupos };
-  }, [electives, offerings]);
+  }, [electives, offerings, inscritos]);
 
   return (
     <div>

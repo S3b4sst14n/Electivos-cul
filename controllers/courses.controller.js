@@ -209,7 +209,17 @@ async function deleteOffering(req, res) {
   return res.json({ mensaje: 'Oferta eliminada exitosamente' });
 }
 
+async function getAdminStats(req, res) {
+  const { count, error } = await supabase
+    .from('enrollments')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'inscrito');
+
+  if (error) return res.status(500).json({ error: 'Error al obtener estadísticas' });
+  return res.json({ inscritos: count });
+}
+
 module.exports = {
   getElectives, getElectiveById, createElective, updateElective, deleteElective,
-  getOfferings, createOffering, updateOffering, deleteOffering
+  getOfferings, createOffering, updateOffering, deleteOffering, getAdminStats
 };

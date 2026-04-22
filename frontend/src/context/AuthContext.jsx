@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  const isAdmin = user?.rol === 'admin';
+  const isAdmin = user?.rol === 'Administrador';
   const isAuth = !!user;
 
   return (
