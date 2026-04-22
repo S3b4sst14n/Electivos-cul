@@ -203,6 +203,7 @@ El token se obtiene al hacer login y tiene validez de **8 horas**.
 
 | Método | Ruta | Descripción | Auth |
 |--------|------|-------------|------|
+| GET | `/api/cursos/ofertas/stats` | Métricas del dashboard (totales, tasa de ocupación) | Admin |
 | GET | `/api/cursos/ofertas/lista` | Listar ofertas con detalles | No |
 | POST | `/api/cursos/ofertas/nueva` | Crear oferta | Admin |
 | PUT | `/api/cursos/ofertas/:id` | Actualizar oferta | Admin |
