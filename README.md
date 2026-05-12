@@ -7,7 +7,7 @@ Plataforma web para la inscripción y gestión de cursos electivos de la Corpora
 | Capa | Tecnología |
 |------|-----------|
 | Frontend | React 18 + Vite + Tailwind CSS |
-| Backend | Node.js 20 + Express 5 |
+| Backend | Node.js 22 + Express 5 |
 | Base de datos | Supabase (PostgreSQL) |
 | Autenticación | JWT (8 h) + bcryptjs |
 | Deploy | Vercel (frontend) + Railway (backend) |
