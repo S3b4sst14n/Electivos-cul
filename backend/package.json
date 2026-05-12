@@ -1,0 +1,23 @@
+{
+  "name": "electivos-cul-backend",
+  "version": "1.0.0",
+  "description": "API REST para gestión de electivas (Express + Supabase)",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "hash": "node scripts/hash-password.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

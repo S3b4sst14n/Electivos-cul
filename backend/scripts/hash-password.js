@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const password = process.argv[2];
 
 if (!password) {
-  console.error('Uso: node scripts/hash-password.js <contraseña>');
+  console.error('Uso: npm run hash <contraseña>');
   process.exit(1);
 }
 

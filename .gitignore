@@ -1,10 +1,20 @@
 # Dependencias
 node_modules/
+**/node_modules/
 
-# Variables de entorno
+# Variables de entorno (NUNCA commitear secretos)
 .env
 .env.local
 .env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Builds
+dist/
+build/
+**/dist/
+**/build/
 
 # Supabase local (si usas CLI)
 supabase/.branches/
@@ -31,6 +41,10 @@ coverage/
 # Caché
 .npm
 .eslintcache
+.vite/
+
+# Deploy
+.vercel/
 
 # Claude (contexto local, no sube)
 .claude/
